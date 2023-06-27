@@ -22,6 +22,7 @@ const DeshBord = () => {
   const handleDelete = () => {
     setActiveTab("DELETE");
   };
+
   return (
     <Pane marginTop={16} height={120}>
       <Tablist marginBottom={16} flexBasis={240} marginRight={24}>
@@ -61,9 +62,9 @@ const DeshBord = () => {
           height: "3px",
         }}
       ></hr>
-      <Pane display="flex" height={240}>
+      <Pane display="flex" height={600}>
         <Tablist
-          className="vtablist"
+          style={{ overflowY: "auto" }}
           marginBottom={16}
           flexBasis={240}
           marginRight={24}
@@ -96,6 +97,13 @@ const DeshBord = () => {
           >
             DELETE
           </Tab>
+          <Tab direction="vertical">a</Tab>
+          <Tab direction="vertical">a</Tab>
+          <Tab direction="vertical">a</Tab>
+          <Tab direction="vertical">a</Tab>
+          <Tab direction="vertical">a</Tab>
+          <Tab direction="vertical">a</Tab>
+          <Tab direction="vertical">a</Tab>
           <Tab direction="vertical">a</Tab>
           <Tab direction="vertical">a</Tab>
           <Tab direction="vertical">a</Tab>
