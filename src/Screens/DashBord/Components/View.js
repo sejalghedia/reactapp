@@ -1,11 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Table } from "evergreen-ui";
-import { Pane, Button } from "evergreen-ui";
-import { DeleteIcon, EditIcon, TrashIcon } from "evergreen-ui";
-
+import { Pane, Button, Paragraph } from "evergreen-ui";
+import { EditIcon, TrashIcon, Dialog } from "evergreen-ui";
+import { Link } from "react-router-dom";
 import axios from "axios";
+
 const View = (props) => {
+  const [isShown, setIsShown] = useState(false);
   const [APIData, setAPIData] = useState([]);
   //for view record
   useEffect(() => {
@@ -18,13 +20,19 @@ const View = (props) => {
       .catch((error) => {});
   }, []);
   const deleteRecord = (id) => {
-    axios
-      .delete(`http://laravelcrud.artixun.com/api/users/${id}`)
-      .then((response) => {
-        const del = APIData.filter((data) => id !== data.id);
-        setAPIData(del);
-      });
+    setIsShown(true);
+    console.log(id);
+    console.log("delete");
+    
+
+    // axios
+    //   .delete(`http://laravelcrud.artixun.com/api/users/${id}`)
+    //   .then((response) => {
+    //     const del = APIData.filter((data) => id !== data.id);
+    //     setAPIData(del);
+    //   });
   };
+
   return (
     <>
       <Pane>
@@ -54,10 +62,41 @@ const View = (props) => {
                 <Table.TextCell>{items.active}</Table.TextCell>
                 <Table.TextCell>{items.gender}</Table.TextCell>
                 <Table.TextCell>
-                  <Button>{<EditIcon color="success" />}</Button>
+                  <Link to={`/Edit/${items.id}`}>
+                    <Button id={items.id}>
+                      {<EditIcon color="success" />}
+                    </Button>
+                  </Link>
+
+                  <Dialog
+                    isShown={isShown}
+                    title="Dialog title"
+                    intent="danger"
+                    confirmLabel="Delete"
+                  >
+                    Are you sure you want to delete this data?
+                  </Dialog>
+
                   <Button marginLeft={4} onClick={() => deleteRecord(items.id)}>
-                    {<TrashIcon color="danger" />}
+                    <TrashIcon color="danger" />
                   </Button>
+
+                  {/* <Dialog
+                    isShown={isShown}
+                    onCancel={cancle}
+                    confirmLabel="Delete"
+                  >
+                    Do you want to delete this record
+                  </Dialog>
+                  <Button
+                    marginLeft={4}
+                    onClick={() => {
+                      deleteRecord(items.id);
+                      setIsShown(true);
+                    }}
+                  >
+                    <TrashIcon color="danger" /> 
+                  </Button>*/}
                 </Table.TextCell>
               </Table.Row>
             ))}

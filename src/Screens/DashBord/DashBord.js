@@ -1,129 +1,79 @@
-import { useState } from "react";
 import React from "react";
-
-import Add from "./Components/Add";
-import Edit from "./Components/Edit";
-import Delete from "./Components/Delete";
-import View from "./Components/View";
-import { Pane, Tablist, Tab, Text } from "evergreen-ui";
+import { Link } from "react-router-dom";
+import { Pane, Tablist, Tab } from "evergreen-ui";
 
 const DeshBord = () => {
-  const [activeTab, setActiveTab] = useState("ADD");
-
-  const handleAdd = () => {
-    setActiveTab("ADD");
-  };
-  const handleEdit = () => {
-    setActiveTab("EDIT");
-  };
-  const handleView = () => {
-    setActiveTab("VIEW");
-  };
-  const handleDelete = () => {
-    setActiveTab("DELETE");
-  };
-
   return (
-    <Pane marginTop={16} height={120}>
-      <Tablist marginBottom={16} flexBasis={240} marginRight={24}>
-        <Text marginLeft={100} marginRight={100}>
-          <b> U-DATA</b>
-        </Text>
-        <Tab
-          className={activeTab === "ADD" ? "active" : ""}
-          onSelect={handleAdd}
-        >
-          ADD
-        </Tab>
-        <Tab
-          className={activeTab === "EDIT" ? "active" : ""}
-          onSelect={handleEdit}
-        >
-          EDIT
-        </Tab>
-        <Tab
-          className={activeTab === "VIEW" ? "active" : ""}
-          onSelect={handleView}
-        >
-          VIEW
-        </Tab>
-        <Tab
-          className={activeTab === "DELETE" ? "active" : ""}
-          onSelect={handleDelete}
-        >
-          DELETE
-        </Tab>
-      </Tablist>
-      <hr
-        style={{
-          background: "lightgray",
-          color: "lightgray",
-          borderColor: "lightgray",
-          height: "3px",
-        }}
-      ></hr>
-      <Pane display="flex" height={600}>
+    <>
+      <Pane display="flex" height={580} width={250}>
         <Tablist
           style={{ overflowY: "auto" }}
           marginBottom={16}
           flexBasis={240}
           marginRight={24}
         >
-          <Tab
-            direction="vertical"
-            className={activeTab === "ADD" ? "active" : ""}
-            onSelect={handleAdd}
-          >
-            ADD
+          <Link to="/">
+            <Tab marginBottom={10} marginTop={10} direction="vertical">
+              ADD
+            </Tab>
+          </Link>
+          {/* <Link to="/Edit">
+            <Tab marginBottom={10} marginTop={10} direction="vertical">
+              EDIT
+            </Tab>
+          </Link> */}
+          <Link to="/View">
+            <Tab marginBottom={10} marginTop={10} direction="vertical">
+              VIEW
+            </Tab>
+          </Link>
+          <Link to="/Delete">
+            <Tab marginBottom={10} marginTop={10} direction="vertical">
+              DELETE
+            </Tab>
+          </Link>
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            All USERS
           </Tab>
-          <Tab
-            direction="vertical"
-            className={activeTab === "EDIT" ? "active" : ""}
-            onSelect={handleEdit}
-          >
-            EDIT
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            MALE
           </Tab>
-          <Tab
-            direction="vertical"
-            className={activeTab === "VIEW" ? "active" : ""}
-            onSelect={handleView}
-          >
-            VIEW
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            FEMALE
           </Tab>
-          <Tab
-            direction="vertical"
-            className={activeTab === "DELETE" ? "active" : ""}
-            onSelect={handleDelete}
-          >
-            DELETE
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            PRODUCTS
           </Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
-          <Tab direction="vertical">a</Tab>
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            ACCOUNT
+          </Tab>
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            APPLICATION
+          </Tab>
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            COMPONENTS
+          </Tab>
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            FOUNDATION
+          </Tab>
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            DATA
+          </Tab>
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            APPLICATION
+          </Tab>
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            COMPONENTS
+          </Tab>
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            FOUNDATION
+          </Tab>
+          <Tab marginBottom={10} marginTop={10} direction="vertical">
+            DATA
+          </Tab>
         </Tablist>
-        <Pane padding={30}>
-          {activeTab === "ADD" ? (
-            <Add />
-          ) : activeTab === "EDIT" ? (
-            <Edit />
-          ) : activeTab === "VIEW" ? (
-            <View />
-          ) : (
-            <Delete />
-          )}
-        </Pane>
       </Pane>
-    </Pane>
+    </>
   );
 };
 export default DeshBord;
