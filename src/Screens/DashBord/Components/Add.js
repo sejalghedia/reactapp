@@ -1,27 +1,34 @@
 import React, { useState } from "react";
-import { Pane, TextInputField } from "evergreen-ui";
-import { RadioGroup, Button } from "evergreen-ui";
-import { FilePicker } from "evergreen-ui";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import {
+  Pane,
+  Small,
+  TextInputField,
+  RadioGroup,
+  Button,
+  Text,
+  FilePicker,
+} from "evergreen-ui";
 
 const Add = (props) => {
   const navigate = useNavigate();
+
+  const [enterName, setEnterName] = useState("");
+  const [enterEmail, setEnterEmail] = useState("");
+  const [file, setFile] = useState([]);
+  const [gender, setGender] = useState("null");
+  const [active, setActive] = useState("null");
+  const [error, setError] = useState([]);
 
   const [selectGender] = useState([
     { label: "male", value: "male" },
     { label: "female", value: "female" },
   ]);
   const [selectStatus] = useState([
-    { label: "active", value: "0" },
-    { label: "unactive", value: "1" },
+    { label: "true", value: "1" },
+    { label: "false", value: "0" },
   ]);
-
-  const [enterName, setEnterName] = useState("");
-  const [enterEmail, setEnterEmail] = useState("");
-  const [file, setFile] = useState([]);
-  const [gender, setGender] = useState("male");
-  const [active, setActive] = useState("0");
 
   function handleGenderChange(e) {
     if (e.target.checked) {
@@ -46,11 +53,18 @@ const Add = (props) => {
 
     axios
       .post(`http://laravelcrud.artixun.com/api/users`, data)
+
       .then((response) => {
-        alert("Saved successfully.");
-        navigate("/View");
+        if (response.status === 200) {
+          alert("Saved successfully.");
+          navigate("/View");
+        }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        if (error.response.status === 422) {
+          setError(error.response.data.errors);
+        }
+      });
   };
 
   return (
@@ -63,7 +77,7 @@ const Add = (props) => {
       justifyContent="center"
       flexDirection="column"
     >
-      <Pane>
+      <Pane marginBottom={20}>
         <TextInputField
           label="Name"
           width={500}
@@ -73,9 +87,10 @@ const Add = (props) => {
           id="inputName"
           onChange={(e) => setEnterName(e.target.value)}
         />
+        <Text color="red">{error.name}</Text>
       </Pane>
 
-      <Pane>
+      <Pane marginBottom={20}>
         <TextInputField
           label="Email"
           required
@@ -84,9 +99,10 @@ const Add = (props) => {
           id="inputEmail"
           onChange={(e) => setEnterEmail(e.target.value)}
         />
+        <Small color="red">{error.email}</Small>
       </Pane>
 
-      <Pane>
+      <Pane marginBottom={20}>
         Image
         <FilePicker
           marginY={10}
@@ -97,9 +113,10 @@ const Add = (props) => {
           }}
           placeholder="Select the file here!"
         />
+        <Small color="red">{error.avatar}</Small>
       </Pane>
 
-      <Pane>
+      <Pane marginBottom={20}>
         {"Gender"}
         <RadioGroup
           size={16}
@@ -107,9 +124,10 @@ const Add = (props) => {
           options={selectGender}
           onChange={handleGenderChange}
         />
+        <Small color="red">{error.gender}</Small>
       </Pane>
 
-      <Pane>
+      <Pane marginBottom={20}>
         {"Status"}
         <RadioGroup
           size={16}
@@ -117,9 +135,10 @@ const Add = (props) => {
           options={selectStatus}
           onChange={handleActiveChange}
         />
+        <Small color="red">{error.active}</Small>
       </Pane>
 
-      <Pane>
+      <Pane marginBottom={20}>
         <Button onClick={handleSubmit}>add</Button>
       </Pane>
     </Pane>

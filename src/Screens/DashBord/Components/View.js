@@ -1,15 +1,14 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Table } from "evergreen-ui";
-import { Pane, Button, Paragraph } from "evergreen-ui";
-import { EditIcon, TrashIcon, Dialog } from "evergreen-ui";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { EditIcon, TrashIcon, Dialog, Pane, Button, Table } from "evergreen-ui";
 
 const View = (props) => {
   const [isShown, setIsShown] = useState(false);
   const [APIData, setAPIData] = useState([]);
-  //for view record
+  const [id, setId] = useState();
+
   useEffect(() => {
     axios
       .get("http://laravelcrud.artixun.com/api/users")
@@ -19,18 +18,14 @@ const View = (props) => {
       })
       .catch((error) => {});
   }, []);
-  const deleteRecord = (id) => {
-    setIsShown(true);
-    console.log(id);
-    console.log("delete");
-    
 
-    // axios
-    //   .delete(`http://laravelcrud.artixun.com/api/users/${id}`)
-    //   .then((response) => {
-    //     const del = APIData.filter((data) => id !== data.id);
-    //     setAPIData(del);
-    //   });
+  const deleteRecord = (id) => {
+    axios
+      .delete(`http://laravelcrud.artixun.com/api/users/${id}`)
+      .then((response) => {
+        const del = APIData.filter((data) => id !== data.id);
+        setAPIData(del);
+      });
   };
 
   return (
@@ -67,41 +62,34 @@ const View = (props) => {
                       {<EditIcon color="success" />}
                     </Button>
                   </Link>
-
-                  <Dialog
-                    isShown={isShown}
-                    title="Dialog title"
-                    intent="danger"
-                    confirmLabel="Delete"
-                  >
-                    Are you sure you want to delete this data?
-                  </Dialog>
-
-                  <Button marginLeft={4} onClick={() => deleteRecord(items.id)}>
-                    <TrashIcon color="danger" />
-                  </Button>
-
-                  {/* <Dialog
-                    isShown={isShown}
-                    onCancel={cancle}
-                    confirmLabel="Delete"
-                  >
-                    Do you want to delete this record
-                  </Dialog>
                   <Button
-                    marginLeft={4}
                     onClick={() => {
-                      deleteRecord(items.id);
+                      setId(items.id);
                       setIsShown(true);
                     }}
                   >
-                    <TrashIcon color="danger" /> 
-                  </Button>*/}
+                    <TrashIcon color="danger" />
+                  </Button>
                 </Table.TextCell>
               </Table.Row>
             ))}
+            <Pane>
+              <Dialog
+                isShown={isShown}
+                title="Delete"
+                intent="danger"
+                onCloseComplete={() => setIsShown(false)}
+                confirmLabel="Delete"
+                onConfirm={() => {
+                  deleteRecord(id);
+                  setIsShown(false);
+                }}
+              >
+                Are you sure you want to delete this item?
+              </Dialog>
+            </Pane>
           </Table.Body>
-        </Table>{" "}
+        </Table>
       </Pane>
     </>
   );

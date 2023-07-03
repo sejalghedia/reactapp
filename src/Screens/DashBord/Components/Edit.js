@@ -1,33 +1,35 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   Pane,
   TextInputField,
   FilePicker,
   RadioGroup,
   Button,
+  Small,
 } from "evergreen-ui";
-import axios from "axios";
 
 const Edit = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState();
+  const [error, setError] = useState([]);
+  let { id } = useParams();
+
   const [selectGender] = useState([
     { label: "male", value: "male" },
     { label: "female", value: "female" },
   ]);
   const [selectStatus] = useState([
-    { label: "active", value: "0" },
-    { label: "unactive", value: "1" },
+    { label: "true", value: "1" },
+    { label: "false", value: "0" },
   ]);
-  const [user, setUser] = useState();
-  let { id } = useParams();
 
   const getUserData = () => {
     axios
       .get(`http://laravelcrud.artixun.com/api/users/${id}`)
       .then((response) => {
-        // console.log("response=", response);
         setUser(response.data.data);
       })
       .catch((error) => {});
@@ -44,35 +46,48 @@ const Edit = () => {
   }
 
   function handleActiveChange(e) {
-    if (e.target.checked) {
-      setUser({ ...user, active: e });
+    if (e.target.checked === true) {
+      setUser({ ...user, active: e.target.value });
     }
   }
 
-  // const handleUpdate = (e) => {
-  //   e.preventDefault();
-  //   const data = new FormData();
-  //   data.append("id", user.id);
-  //   data.append("name", user.name);
-  //   data.append("email", user.email);
-  //   data.append("gender", user.gender);
-  //   // data.append("avatar", user.file);
-  //   data.append("active", user.active);
-  //   data.append("_method", "put");
+  const handleImgChange = (e) => {
+    let url = URL.createObjectURL(e.target.files[0]);
+    setUser({ ...user, avatar: url });
+  };
 
-  //   axios
-  //     .post(`http://laravelcrud.artixun.com/api/users/${user.id}`, data)
-  //     .then((response) => {
-  //       let allData = response.data.data;
-  //       setUser(allData);
-  //       console.log("updated");
-  //     })
-  //     .catch((error) => {});
-  // };
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append("id", user.id);
+    data.append("name", user.name);
+    data.append("email", user.email);
+    data.append("gender", user.gender);
+    // data.append("avatar", user.avatar);
+    data.append("active", user.active);
+    data.append("_method", "put");
+
+    axios
+      .post(`http://laravelcrud.artixun.com/api/users/${user.id}`, data)
+      .then((response) => {
+        if (response.status === 200) {
+          let allData = response.data.data;
+          setUser(allData);
+          alert("Updated successfully.");
+          navigate("/View");
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 422) {
+          setError(error.response.data.errors);
+        }
+      });
+  };
 
   if (!user) {
     return null;
   }
+
   return (
     <Pane
       elevation={4}
@@ -83,8 +98,7 @@ const Edit = () => {
       justifyContent="center"
       flexDirection="column"
     >
-      <Pane>hello</Pane>
-      <Pane>
+      <Pane marginBottom={20}>
         <TextInputField
           label="Name"
           width={500}
@@ -95,9 +109,10 @@ const Edit = () => {
           value={user.name}
           onChange={(e) => setUser({ ...user, name: e.target.value })}
         />
+        <Small color="red">{error.name}</Small>
       </Pane>
 
-      <Pane>
+      <Pane marginBottom={20}>
         <TextInputField
           label="Email"
           required
@@ -105,25 +120,24 @@ const Edit = () => {
           className="form-control"
           id="inputEmail"
           value={user.email}
-          onChange={(e) => setUser({ ...user, name: e.target.value })}
+          onChange={(e) => setUser({ ...user, email: e.target.value })}
         />
+        <Small color="red">{error.email}</Small>
       </Pane>
 
-      <Pane>
+      <Pane marginBottom={20}>
         Image
         <FilePicker
           marginY={10}
           multiple
           width={250}
-          // value={user.avatar}
-          // onChange={(files) => {
-          //   setFile(files[0]);
-          // }}
-          placeholder="Select the file here!"
+          placeholder={user.avatar.toString()}
+          onChange={(e) => handleImgChange(e)}
         />
+        <Small color="red">{error.avatar}</Small>
       </Pane>
 
-      <Pane>
+      <Pane marginBottom={20}>
         {"Gender"}
         <RadioGroup
           size={16}
@@ -133,25 +147,24 @@ const Edit = () => {
             handleGenderChange(e);
           }}
         />
+        <Small color="red">{error.gender}</Small>
       </Pane>
 
-      <Pane role="group">
+      <Pane role="group" marginBottom={20}>
+        Status
         <RadioGroup
           size={16}
-          // value={user.active}
+          value={user.active.toString()}
           options={selectStatus}
           onChange={(e) => {
             handleActiveChange(e);
           }}
         />
+        <Small color="red">{error.active}</Small>
       </Pane>
 
-      <Pane>
-        <Button
-        // onClick={handleUpdate}
-        >
-          Update
-        </Button>
+      <Pane marginBottom={20}>
+        <Button onClick={handleUpdate}>Update</Button>
       </Pane>
     </Pane>
   );

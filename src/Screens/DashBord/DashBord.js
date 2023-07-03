@@ -11,6 +11,7 @@ const DeshBord = () => {
           marginBottom={16}
           flexBasis={240}
           marginRight={24}
+          paddingX={15}
         >
           <Link to="/">
             <Tab marginBottom={10} marginTop={10} direction="vertical">
