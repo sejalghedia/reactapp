@@ -45,14 +45,14 @@ const View = (props) => {
             {APIData.map((items) => (
               <Table.Row
                 key={items.id}
-                // isSelectable
-                // onSelect={() => alert(items.name)}
+                isSelectable
+                onSelect={() => alert(items.name)}
               >
                 <Table.TextCell>{items.id}</Table.TextCell>
                 <Table.TextCell>{items.name}</Table.TextCell>
                 <Table.TextCell>{items.email}</Table.TextCell>
                 <Table.TextCell>
-                  <img src={items.avatar} alt="img" width="30" height="35" />
+                  <img src={items.avatar} alt="img" width="40" height="45" />
                 </Table.TextCell>
                 <Table.TextCell>{items.active}</Table.TextCell>
                 <Table.TextCell>{items.gender}</Table.TextCell>
